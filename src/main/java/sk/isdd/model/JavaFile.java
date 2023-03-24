@@ -1,29 +1,24 @@
 package sk.isdd.model;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.substringAfter;
 
 public final class JavaFile {
 
     private final String packageName;
     private final String className;
     private final List<String> importList;
-    private Project project;
+    private final Project project;
 
 
     public JavaFile(String packageName, String className, List<String> importList) {
         this.packageName = packageName;
         this.className = className;
         this.importList = importList;
-    }
-
-    public JavaFile(String packageName, String className, List<String> importList, Project project) {
-        this.packageName = packageName;
-        this.className = className;
-        this.importList = importList;
-        this.project = project;
+        this.project = new Project(parseProjectName());
     }
 
     public String getPackageName() {
@@ -42,19 +37,21 @@ public final class JavaFile {
         return project;
     }
 
-    public String getProjectasString() {
-        String substringAfter = StringUtils.substringAfter(packageName, "metais.");
-        if (StringUtils.isBlank(substringAfter)) {
-            return null;
-        }
-        return substringAfter.split("[.;]")[0];
+    public String getProjectName() {
+        return project.getName();
+    }
+
+    public String parseProjectName() {
+        String substr = substringAfter(packageName, "metais.");
+        if (isBlank(substr)) {return null;}
+        return substr.split("[.;]")[0];
     }
 
     @Override
     public String toString() {
         return "JavaFile{" +
                 "packageName='" + packageName + '\'' +
-                ", project=" + getProjectasString() +
+                ", project=" + project +
                 ", className='" + className + '\'' +
                 ", importList=" + importList +
                 '}';

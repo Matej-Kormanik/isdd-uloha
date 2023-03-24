@@ -27,4 +27,11 @@ public class Project {
     public List<Project> getDependencies() {
         return dependencies;
     }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

@@ -1,25 +1,58 @@
 package sk.isdd;
 
+import sk.isdd.mapper.Mapper;
 import sk.isdd.model.JavaFile;
 import sk.isdd.parser.RecursiveJavaParser;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class App {
 
     private static final String ROOT_PROJECT_DIR = "/Users/matejkormanik/Work/codebase/metais3-all";
+    private static List<JavaFile> fileList = new ArrayList<>();
 
 
-    public static void main(String args[]) {
+
+    public void parseFiles() {
         File rootDir = new File(ROOT_PROJECT_DIR);
         if (rootDir.isDirectory()) {
             RecursiveJavaParser parser = RecursiveJavaParser.getInstance();
             parser.parseJavaFiles(rootDir);
-            List<JavaFile> fileList = parser.getFileList();
-            fileList.forEach(System.out::println);
+            fileList = parser.getFileList();
         } else {
             System.out.println("Invalid directory.");
         }
+    }
+
+    public void mapData() {
+        Mapper mapper = new Mapper(fileList);
+
+/*        Map<String, List<JavaFile>> stringListMap = mapper.projectToClassesMap();
+        Map<String, List<String>> projToClasses = Mapper.flattenList(stringListMap);
+        projToClasses.forEach((s, strings) -> System.out.println(s + " -> " + strings));*/
+
+  /*      Map<String, List<String>> classToImportsMap = mapper.classToImportsMap();
+        System.out.println(classToImportsMap);*/
+
+        Map<String, List<JavaFile>> stringListMap = mapper.projectToPackageMap();
+        System.out.println(stringListMap);
+    }
+
+    public void printFileList() {
+        fileList.forEach(System.out::println);
+    }
+
+    public static void main(String args[]) {
+        App app = new App();
+        app.parseFiles();
+//        app.printFileList();
+        app.mapData();
+
     }
 }
