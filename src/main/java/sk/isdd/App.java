@@ -1,6 +1,7 @@
 package sk.isdd;
 
 import sk.isdd.mapper.Mapper;
+import sk.isdd.mapper.strategy.ProjectToClasses;
 import sk.isdd.model.JavaFile;
 import sk.isdd.parser.RecursiveJavaParser;
 
@@ -32,6 +33,7 @@ public class App {
 
     public void mapData() {
         Mapper mapper = new Mapper(fileList);
+        mapper.setMappingStrategy(new ProjectToClasses());
 
 /*        Map<String, List<JavaFile>> stringListMap = mapper.projectToClassesMap();
         Map<String, List<String>> projToClasses = Mapper.flattenList(stringListMap);
@@ -41,7 +43,8 @@ public class App {
         System.out.println(classToImportsMap);*/
 
         Map<String, List<JavaFile>> stringListMap = mapper.projectToPackageMap();
-        System.out.println(stringListMap);
+        Map<String, List<String>> flat = Mapper.flattenList(stringListMap, JavaFile::getPackageName);
+        flat.forEach((s, strings) -> System.out.println(s + " -> " + strings));
     }
 
     public void printFileList() {

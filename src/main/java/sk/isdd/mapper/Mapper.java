@@ -1,7 +1,7 @@
 package sk.isdd.mapper;
 
+import sk.isdd.mapper.strategy.MappingStrategy;
 import sk.isdd.model.JavaFile;
-import sk.isdd.model.Project;
 
 import java.util.List;
 import java.util.Map;
@@ -9,16 +9,20 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
 public class Mapper {
 
     private final List<JavaFile> javaFileList;
+    private MappingStrategy mappingStrategy;
 
     public Mapper(List<JavaFile> javaFileList) {
         this.javaFileList = filterNoProjects(javaFileList);
+    }
+
+    public Map<String, List<String>> map() {
+        return mappingStrategy.map();
     }
 
 
@@ -55,13 +59,13 @@ public class Mapper {
                 .collect(toList());
     }
 
-    public static Map<String, List<String>> flattenList(Map<String, List<JavaFile>> aMap) {
+    public static Map<String, List<String>> flattenList(Map<String, List<JavaFile>> aMap, Function<? super JavaFile,? extends String> toProp) {
         return aMap
                 .entrySet()
                 .stream()
                 .collect(toMap(
                         Map.Entry::getKey,
-                        e -> e.getValue().stream().map(JavaFile::getClassName).collect(toList())));
+                        e -> e.getValue().stream().map(toProp).collect(toList())));
     }
 
     public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
@@ -69,4 +73,7 @@ public class Mapper {
         return t -> seen.add(keyExtractor.apply(t));
     }
 
+    public void setMappingStrategy(MappingStrategy mappingStrategy) {
+        this.mappingStrategy = mappingStrategy;
+    }
 }
