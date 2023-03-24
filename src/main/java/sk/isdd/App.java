@@ -8,7 +8,7 @@ import java.util.List;
 
 public class App {
 
-    private static final String ROOT_PROJECT_DIR = "/Users/matejkormanik/Work/codebase/metais3-all/bpm-engine";
+    private static final String ROOT_PROJECT_DIR = "/Users/matejkormanik/Work/codebase/metais3-all";
 
 
     public static void main(String args[]) {
