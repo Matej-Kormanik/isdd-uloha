@@ -4,8 +4,10 @@ import sk.isdd.model.JavaFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import static java.util.stream.Collectors.*;
+
 
 public class ProjectToProjects implements MappingStrategy {
 
@@ -15,22 +17,22 @@ public class ProjectToProjects implements MappingStrategy {
                 .stream()
                 .collect(groupingBy(JavaFile::getProjectName));
 
-        print(map);
+        Map<String, List<String>> projectToImportsMap = projectToImportsMap(map);
 
-        Map<String, List<List<String>>> collect = map.entrySet().stream()
+        return projectToImportsMap;
+    }
+
+    private Map<String, List<String>> projectToImportsMap(Map<String, List<JavaFile>> map) {
+        return map.entrySet()
+                .stream()
                 .collect(toMap(
-                        Map.Entry::getKey,
-                        e -> e.getValue().stream().map(JavaFile::getImportList).collect(toList())
+                        Entry::getKey,
+                        e -> e.getValue()
+                                .stream()
+                                .flatMap(file -> file.getImportList().stream())
+                                .collect(toList())
                 ));
-
-
-        return null;
     }
 
-    private void print(Map<String, List<JavaFile>> map) {
-        map.forEach((proj, fileList) -> {
-            System.out.println(proj + " -> ");
-            fileList.forEach(System.out::println);
-        });
-    }
+
 }

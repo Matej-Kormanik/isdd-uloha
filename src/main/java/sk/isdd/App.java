@@ -31,8 +31,7 @@ public class App {
         Mapper mapper = new Mapper(fileList);
 
         mapper.setMappingStrategy(new ProjectToProjects());
-//        print(mapper.map());
-        mapper.map();
+        print(mapper.map());
     }
 
     public void print(Map<String, List<String>> res) {
@@ -43,6 +42,5 @@ public class App {
         App app = new App();
         app.parseFiles();
         app.mapData();
-//        fileList.forEach(System.out::println);
     }
 }
