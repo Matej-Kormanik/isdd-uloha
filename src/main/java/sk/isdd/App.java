@@ -2,6 +2,7 @@ package sk.isdd;
 
 import sk.isdd.mapper.Mapper;
 import sk.isdd.mapper.strategy.ClassToImports;
+import sk.isdd.mapper.strategy.PackageToProjects;
 import sk.isdd.mapper.strategy.ProjectToClasses;
 import sk.isdd.mapper.strategy.ProjectToPackages;
 import sk.isdd.model.JavaFile;
@@ -32,13 +33,10 @@ public class App {
     public void mapData() {
         Mapper mapper = new Mapper(fileList);
 
-        mapper.setMappingStrategy(new ClassToImports());
+        mapper.setMappingStrategy(new PackageToProjects());
         print(mapper.map());
     }
 
-    public void printFileList() {
-        fileList.forEach(System.out::println);
-    }
     public void print(Map<String, List<String>> res) {
         res.forEach((s, strings) -> System.out.println(s + " -> " + strings));
     }
@@ -46,7 +44,6 @@ public class App {
     public static void main(String args[]) {
         App app = new App();
         app.parseFiles();
-//        app.printFileList();
         app.mapData();
 
     }
