@@ -5,15 +5,16 @@ import sk.isdd.model.JavaFile;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.stream.Collectors.groupingBy;
+
 public class PackageToProjects implements MappingStrategy{
 
     @Override
     public Map<String, List<String>> map(List<JavaFile> javaFileList) {
-        printFileList(javaFileList);
-        return null;
+        Map<String, List<JavaFile>> grouppedByPackageMap = javaFileList.stream()
+                .collect(groupingBy(JavaFile::getPackageName));
+
+        return MappingStrategy.flattenList(grouppedByPackageMap, JavaFile::getProjectName);
     }
 
-    public void printFileList(List<JavaFile> javaFileList) {
-        javaFileList.forEach(System.out::println);
-    }
 }

@@ -12,6 +12,9 @@ import java.util.function.Predicate;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
+/**
+ * Mapping strategy. Utilizes Strategy design pattern.
+ */
 public interface MappingStrategy {
 
 
