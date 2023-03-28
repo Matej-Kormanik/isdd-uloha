@@ -13,26 +13,26 @@ public class ProjectToProjects implements MappingStrategy {
 
     @Override
     public Map<String, List<String>> map(List<JavaFile> javaFileList) {
-        Map<String, List<JavaFile>> map = javaFileList
+        Map<String, List<JavaFile>> grouppedByProjectMap = javaFileList
                 .stream()
                 .collect(groupingBy(JavaFile::getProjectName));
 
-        Map<String, List<String>> projectToImportsMap = projectToImportsMap(map);
-
-        return projectToImportsMap;
+        return mapImportsToProjects(grouppedByProjectMap);
     }
 
-    private Map<String, List<String>> projectToImportsMap(Map<String, List<JavaFile>> map) {
+    private Map<String, List<String>> mapImportsToProjects(Map<String, List<JavaFile>> map) {
         return map.entrySet()
                 .stream()
                 .collect(toMap(
                         Entry::getKey,
-                        e -> e.getValue()
+                        entry -> entry.getValue()
                                 .stream()
                                 .flatMap(file -> file.getImportList().stream())
+                                .map(JavaFile::parseProjectName)
+                                .filter(proj -> !proj.equals(entry.getKey()))
+                                .distinct()
                                 .collect(toList())
                 ));
     }
-
 
 }

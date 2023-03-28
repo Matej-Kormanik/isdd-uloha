@@ -1,10 +1,10 @@
 package sk.isdd.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.substringAfter;
 
 public final class JavaFile {
 
@@ -18,7 +18,7 @@ public final class JavaFile {
         this.packageName = packageName;
         this.className = className;
         this.importList = importList;
-        this.project = new Project(parseProjectName());
+        this.project = new Project(parseProjectName(packageName));
     }
 
     public String getPackageName() {
@@ -41,9 +41,9 @@ public final class JavaFile {
         return project.getName();
     }
 
-    public String parseProjectName() {
-        String substr = substringAfter(packageName, "metais.");
-        if (isBlank(substr)) {return null;}
+    public static String parseProjectName(String pckg) {
+        String substr = StringUtils.substringAfter(pckg, "metais.");
+        if (StringUtils.isBlank(substr)) {return null;}
         return substr.split("[.;]")[0];
     }
 
