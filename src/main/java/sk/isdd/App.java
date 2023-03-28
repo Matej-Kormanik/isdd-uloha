@@ -1,5 +1,6 @@
 package sk.isdd;
 
+import print.PlantUmlPrinter;
 import sk.isdd.mapper.Mapper;
 import sk.isdd.mapper.strategy.*;
 import sk.isdd.model.JavaFile;
@@ -16,6 +17,14 @@ public class App {
     private static List<JavaFile> fileList = new ArrayList<>();
 
 
+    public static void main(String args[]) {
+        App app = new App();
+        app.parseFiles();
+        app.mapData();
+    }
+
+
+
     public void parseFiles() {
         File rootDir = new File(ROOT_PROJECT_DIR);
         if (rootDir.isDirectory()) {
@@ -29,18 +38,8 @@ public class App {
 
     public void mapData() {
         Mapper mapper = new Mapper(fileList);
-
         mapper.setMappingStrategy(new ProjectToProjects());
-        print(mapper.map());
+        PlantUmlPrinter.print(mapper.map());
     }
 
-    public void print(Map<String, List<String>> res) {
-        res.forEach((s, strings) -> System.out.println(s + " -> " + strings));
-    }
-
-    public static void main(String args[]) {
-        App app = new App();
-        app.parseFiles();
-        app.mapData();
-    }
 }
