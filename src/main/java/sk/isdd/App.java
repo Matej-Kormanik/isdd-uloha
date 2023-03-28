@@ -1,6 +1,6 @@
 package sk.isdd;
 
-import print.PlantUmlPrinter;
+import sk.isdd.print.PlantUmlPrinter;
 import sk.isdd.mapper.Mapper;
 import sk.isdd.mapper.strategy.*;
 import sk.isdd.model.JavaFile;
@@ -9,10 +9,10 @@ import sk.isdd.parser.RecursiveJavaParser;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class App {
 
+    /** Change to your parent directory */
     private static final String ROOT_PROJECT_DIR = "/Users/matejkormanik/Work/codebase/metais3-all";
     private static List<JavaFile> fileList = new ArrayList<>();
 
@@ -38,7 +38,7 @@ public class App {
 
     public void mapData() {
         Mapper mapper = new Mapper(fileList);
-        mapper.setMappingStrategy(new ProjectToProjects());
+        mapper.setMappingStrategy(new ProjectToProjects()); // todo set strategy here
         PlantUmlPrinter.print(mapper.map());
     }
 
